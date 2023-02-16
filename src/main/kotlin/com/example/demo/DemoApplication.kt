@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan
 
 
 @SpringBootApplication
-//@ComponentScan("com.example.demo")
 @ConfigurationPropertiesScan("com.example.demo")
 class DemoApplication
 

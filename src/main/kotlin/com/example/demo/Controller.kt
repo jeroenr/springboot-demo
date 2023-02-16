@@ -1,12 +1,14 @@
 package com.example.demo
 
 
+import jakarta.validation.ConstraintViolationException
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
 
 
 @RestController
@@ -14,16 +16,23 @@ import javax.validation.constraints.Min
 @Validated
 class Controller {
 
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleException(e: ConstraintViolationException): ResponseEntity<String> {
+        return ResponseEntity<String>(e.constraintViolations.joinToString(";") { it.message }, HttpStatus.BAD_REQUEST)
+    }
+
     //-----------------------------------------------------
     // With PreAuthorize
     //-----------------------------------------------------
     @GetMapping("withPreAuthorize")
-    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('USER')")
     suspend fun withPreAuthorize(
-        @RequestParam(defaultValue = "100", required = true) @Min(1) @Max(100) limit: Int,
+        @RequestParam(
+            defaultValue = "100",
+            required = true
+        ) @Min(1L) @Max(100) limit: Int,
     ): String {
-        return "OK"
+        return "OK $limit"
     }
 
 
@@ -31,10 +40,12 @@ class Controller {
     // Without PreAuthorize
     //-----------------------------------------------------
     @GetMapping("withoutPreAuthorize")
-    @ResponseStatus(HttpStatus.OK)
     suspend fun withoutPreAuthorize(
-        @RequestParam(defaultValue = "100", required = true) @Min(1) @Max(100) limit: Int,
+        @RequestParam(
+            defaultValue = "100",
+            required = true
+        ) @Min(1) @Max(100) limit: Int,
     ): String {
-        return "OK"
+        return "OK $limit"
     }
 }

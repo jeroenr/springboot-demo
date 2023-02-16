@@ -2,6 +2,7 @@ package com.example.demo
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono
 
 @EnableReactiveMethodSecurity
 @EnableWebFluxSecurity
+@Configuration
 class SecurityConfig {
 
     @Bean
